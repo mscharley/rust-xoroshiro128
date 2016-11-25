@@ -2,6 +2,11 @@ machine:
   environment:
     RUST_VERSION: 1.13.0
 
+checkout:
+  post:
+    # Work around some silly configuration added by Circle that doesn't actually even do what they want it to.
+    - git config --global --unset url.ssh://git@github.com:.insteadof
+
 dependencies:
   post:
     - mkdir -p ~/cache/
@@ -12,4 +17,4 @@ dependencies:
 
 test:
   override:
-    - cargo test
+    - cargo --locked test
