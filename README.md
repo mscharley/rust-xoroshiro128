@@ -1,6 +1,6 @@
 # rust-xoroshiro128
 
-[![Build Status](https://travis-ci.org/mscharley/rust-xoroshiro128.svg?branch=master)](https://travis-ci.org/mscharley/rust-xoroshiro128)
+[![CircleCI](https://circleci.com/gh/mscharley/rust-xoroshiro128/tree/master.svg?style=svg)](https://circleci.com/gh/mscharley/rust-xoroshiro128/tree/master)
 
 **Source:** [https://github.com/mscharley/rust-xoroshiro128](https://github.com/mscharley/rust-xoroshiro128)  
 **Author:** Matthew Scharley  
