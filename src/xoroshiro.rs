@@ -28,6 +28,14 @@ impl ::rand::Rng for Xoroshiro {
     }
 
     fn next_u64(&mut self) -> u64 {
-        10
+        let s0 : u64 = self.state[0];
+        let mut s1 : u64 = self.state[1];
+        let result : u64 = s0.wrapping_add(s1);
+
+        s1 ^= s0;
+        self.state[0] = rotate_left(s0, 55) ^ s1 ^ (s1 << 14); // a, b
+        self.state[1] = rotate_left(s1, 36); // c
+
+        return result;
     }
 }
