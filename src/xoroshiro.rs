@@ -1,13 +1,11 @@
+use ::rand::SeedableRng;
 
-pub struct Xoroshiro {
+pub struct XoroshiroRng {
     state : [u64; 2],
     carry : Option<u32>
 }
 
-impl Xoroshiro {
-    pub fn new(state: [u64; 2]) -> Self {
-        Xoroshiro { state: state, carry: None }
-    }
+impl XoroshiroRng {
 }
 
 #[inline(always)]
@@ -15,7 +13,7 @@ fn rotate_left(x: u64, k: i32) -> u64 {
     (x << k) | (x >> (64 - k))
 }
 
-impl ::rand::Rng for Xoroshiro {
+impl ::rand::Rng for XoroshiroRng {
     fn next_u32(&mut self) -> u32 {
         match self.carry {
             None => {
@@ -37,5 +35,29 @@ impl ::rand::Rng for Xoroshiro {
         self.state[1] = rotate_left(s1, 36); // c
 
         return result;
+    }
+}
+
+impl ::rand::SeedableRng<[u64; 2]> for XoroshiroRng {
+    fn reseed(&mut self, seed: [u64; 2]) {
+        assert!(seed != [0, 0], "");
+        self.state = seed
+    }
+
+    fn from_seed(seed: [u64; 2]) -> Self {
+        XoroshiroRng { state: seed, carry: None }
+    }
+}
+
+
+
+impl ::rand::Rand for XoroshiroRng {
+    fn rand<R: ::rand::Rng>(rng: &mut R) -> XoroshiroRng {
+        let mut seed: [u64; 2] = rng.gen();
+        while seed == [0, 0] {
+            seed = rng.gen();
+        }
+
+        XoroshiroRng::from_seed(seed)
     }
 }

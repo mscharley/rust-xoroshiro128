@@ -1,9 +1,9 @@
 
-use ::rand::Rng;
-use super::Xoroshiro;
+use ::rand::{Rng, SeedableRng};
+use ::XoroshiroRng;
 
 fn test_xoro_sequence(lo: u64, hi: u64, sequence: &[u64]) {
-    let mut rng = Xoroshiro::new([lo, hi]);
+    let mut rng = XoroshiroRng::from_seed([lo, hi]);
 
     for i in sequence {
         assert_eq!(rng.gen::<u64>(), *i);
@@ -12,7 +12,7 @@ fn test_xoro_sequence(lo: u64, hi: u64, sequence: &[u64]) {
 
 #[test]
 fn it_works_u32() {
-    let mut rng = Xoroshiro::new([10u64, 20u64]);
+    let mut rng = XoroshiroRng::from_seed([10u64, 20u64]);
 
     // First 64b number is always a + b from the initial state.
     let x: u32 = rng.gen();
@@ -23,7 +23,7 @@ fn it_works_u32() {
 
 #[test]
 fn it_works_u64() {
-    let mut rng = Xoroshiro::new([10u64, 20u64]);
+    let mut rng = XoroshiroRng::from_seed([10u64, 20u64]);
 
     // First 64b number is always a + b from the initial state.
     let x: u64 = rng.gen();
