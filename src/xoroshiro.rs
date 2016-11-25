@@ -5,9 +5,6 @@ pub struct XoroshiroRng {
     carry : Option<u32>
 }
 
-impl XoroshiroRng {
-}
-
 #[inline(always)]
 fn rotate_left(x: u64, k: i32) -> u64 {
     (x << k) | (x >> (64 - k))
@@ -34,7 +31,7 @@ impl ::rand::Rng for XoroshiroRng {
         self.state[0] = rotate_left(s0, 55) ^ s1 ^ (s1 << 14); // a, b
         self.state[1] = rotate_left(s1, 36); // c
 
-        return result;
+        result
     }
 }
 
@@ -45,11 +42,10 @@ impl ::rand::SeedableRng<[u64; 2]> for XoroshiroRng {
     }
 
     fn from_seed(seed: [u64; 2]) -> Self {
+        assert!(seed != [0, 0], "");
         XoroshiroRng { state: seed, carry: None }
     }
 }
-
-
 
 impl ::rand::Rand for XoroshiroRng {
     fn rand<R: ::rand::Rng>(rng: &mut R) -> XoroshiroRng {
