@@ -1,8 +1,15 @@
 use ::rand::SeedableRng;
+use ::time::get_time;
 
 pub struct SplitMixRng {
     state : u64,
     carry : Option<u32>
+}
+
+impl SplitMixRng {
+    pub fn new() -> Self {
+        SplitMixRng::from_seed(())
+    }
 }
 
 impl ::rand::Rng for SplitMixRng {
@@ -33,6 +40,16 @@ impl ::rand::SeedableRng<u64> for SplitMixRng {
 
     fn from_seed(seed: u64) -> Self {
         SplitMixRng { state: seed, carry: None }
+    }
+}
+
+impl ::rand::SeedableRng<()> for SplitMixRng {
+    fn reseed(&mut self, _: ()) {
+        self.reseed(get_time().sec as u64)
+    }
+
+    fn from_seed(_: ()) -> Self {
+        SplitMixRng::from_seed(get_time().sec as u64)
     }
 }
 
