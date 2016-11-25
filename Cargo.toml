@@ -1,0 +1,6 @@
+[package]
+name = "xoroshiro128"
+version = "0.1.0"
+authors = ["Matthew Scharley <matt.scharley@gmail.com>"]
+
+[dependencies]
