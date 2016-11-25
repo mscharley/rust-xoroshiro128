@@ -1,8 +1,15 @@
-use ::rand::SeedableRng;
+use ::rand::{Rng, SeedableRng};
+use ::time::get_time;
 
 pub struct XoroshiroRng {
     state : [u64; 2],
     carry : Option<u32>
+}
+
+impl XoroshiroRng {
+    pub fn new() -> Self {
+        XoroshiroRng::from_seed(())
+    }
 }
 
 #[inline(always)]
@@ -37,13 +44,38 @@ impl ::rand::Rng for XoroshiroRng {
 
 impl ::rand::SeedableRng<[u64; 2]> for XoroshiroRng {
     fn reseed(&mut self, seed: [u64; 2]) {
-        assert!(seed != [0, 0], "");
+        assert!(seed != [0, 0], "Invalid seed: seed must not be 0.");
         self.state = seed
     }
 
     fn from_seed(seed: [u64; 2]) -> Self {
-        assert!(seed != [0, 0], "");
+        assert!(seed != [0, 0], "Invalid seed: seed must not be 0.");
         XoroshiroRng { state: seed, carry: None }
+    }
+}
+
+#[inline(always)]
+fn splitmix_seed(seed: u64) -> [u64; 2] {
+    ::SplitMixRng::from_seed(seed).gen()
+}
+
+impl ::rand::SeedableRng<u64> for XoroshiroRng {
+    fn reseed(&mut self, seed: u64) {
+        self.reseed(splitmix_seed(seed))
+    }
+
+    fn from_seed(seed: u64) -> Self {
+        XoroshiroRng::from_seed(splitmix_seed(seed))
+    }
+}
+
+impl ::rand::SeedableRng<()> for XoroshiroRng {
+    fn reseed(&mut self, _: ()) {
+        self.reseed(splitmix_seed(get_time().sec as u64))
+    }
+
+    fn from_seed(_: ()) -> Self {
+        XoroshiroRng::from_seed(splitmix_seed(get_time().sec as u64))
     }
 }
 

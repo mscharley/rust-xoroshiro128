@@ -1,4 +1,5 @@
 extern crate rand;
+extern crate time;
 
 mod xoroshiro;
 pub use xoroshiro::XoroshiroRng;
