@@ -31,6 +31,12 @@ deployment:
       - cargo doc --no-deps
       - 'git config user.name "CircleCI" && git config user.email "matt.scharley+circleci@gmail.com"'
       - 'cd target/doc && git add . && git commit -m "Updated documentation build." && git push origin gh-pages'
+  crate:
+    tag: /[0-9]+\.[0-9]+\.[0-9]+/
+    commands:
+      - sed -i -e "s/version = .*/version = '$CIRCLECI_TAG'/" Cargo.toml
+      - cargo login $CARGO_TOKEN
+      - cargo publish
 
 general:
   branches:
