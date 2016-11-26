@@ -34,7 +34,7 @@ deployment:
   crate:
     tag: /[0-9]+\.[0-9]+\.[0-9]+/
     commands:
-      - sed -i -e "s/version = .*/version = '$CIRCLECI_TAG'/" Cargo.toml
+      - sed -i -e "s/version = .*/version = '$CIRCLE_TAG'/" Cargo.toml
       - cargo login $CARGO_TOKEN
       - cargo publish
 
