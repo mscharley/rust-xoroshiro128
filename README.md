@@ -1,6 +1,7 @@
 # rust-xoroshiro128
 
 [![CircleCI](https://circleci.com/gh/mscharley/rust-xoroshiro128/tree/master.svg?style=svg)](https://circleci.com/gh/mscharley/rust-xoroshiro128/tree/master)
+[![Crates.io](https://img.shields.io/crates/v/xoroshiro128.svg)][crates.io]
 
 **Source:** [https://github.com/mscharley/rust-xoroshiro128](https://github.com/mscharley/rust-xoroshiro128)  
 **Author:** Matthew Scharley  
@@ -17,7 +18,7 @@ originally proposed by David Blackman and Sebastiano Vigna. [See their website f
 
 ## Installation
 
-`xoroshiro128` isn't currently available on Cargo.
+[`xoroshiro128` is available on crates.io under the same name.][crates.io]
 
 ## Usage
 
@@ -28,3 +29,4 @@ originally proposed by David Blackman and Sebastiano Vigna. [See their website f
   [license]: https://github.com/mscharley/rust-xoroshiro128/blob/master/LICENSE.md
   [xoroshiro]: http://xoroshiro.di.unimi.it/
   [documentation]: https://mscharley.github.io/rust-xoroshiro128/
+  [crates.io]: https://crates.io/crates/xoroshiro128
