@@ -18,3 +18,16 @@ dependencies:
 test:
   override:
     - cargo test --locked
+
+deployment:
+  documentation:
+    branch: master
+    commands:
+      - git worktree add -b gh-pages target/doc origin/gh-pages
+      - cargo doc --no-deps
+      - 'cd target/doc && git add . && git commit -m "Updated documentation build." && git push origin gh-pages'
+
+general:
+  branches:
+    ignore:
+      - gh-pages # Don't run builds against HTML...

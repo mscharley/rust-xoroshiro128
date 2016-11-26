@@ -21,10 +21,10 @@ originally proposed by David Blackman and Sebastiano Vigna. [See their website f
 
 ## Usage
 
-Docs coming soon.
+[Usage and other documentation is available in the official documentation.][documentation]
 
   [gh-contrib]: https://github.com/mscharley/rust-xoroshiro128/graphs/contributors
   [gh-issues]: https://github.com/mscharley/rust-xoroshiro128/issues
   [license]: https://github.com/mscharley/rust-xoroshiro128/blob/master/LICENSE.md
   [xoroshiro]: http://xoroshiro.di.unimi.it/
-  
+  [documentation]: https://mscharley.github.io/rust-xoroshiro128/
