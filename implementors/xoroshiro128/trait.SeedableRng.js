@@ -1,0 +1,10 @@
+(function() {var implementors = {};
+implementors["xoroshiro128"] = ["impl <a class='trait' href='xoroshiro128/trait.SeedableRng.html' title='xoroshiro128::SeedableRng'>SeedableRng</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 2]</a>&gt; for <a class='struct' href='xoroshiro128/struct.XoroshiroRng.html' title='xoroshiro128::XoroshiroRng'>XoroshiroRng</a>","impl <a class='trait' href='xoroshiro128/trait.SeedableRng.html' title='xoroshiro128::SeedableRng'>SeedableRng</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>&gt; for <a class='struct' href='xoroshiro128/struct.XoroshiroRng.html' title='xoroshiro128::XoroshiroRng'>XoroshiroRng</a>","impl <a class='trait' href='xoroshiro128/trait.SeedableRng.html' title='xoroshiro128::SeedableRng'>SeedableRng</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt; for <a class='struct' href='xoroshiro128/struct.XoroshiroRng.html' title='xoroshiro128::XoroshiroRng'>XoroshiroRng</a>","impl <a class='trait' href='xoroshiro128/trait.SeedableRng.html' title='xoroshiro128::SeedableRng'>SeedableRng</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>&gt; for <a class='struct' href='xoroshiro128/struct.SplitMixRng.html' title='xoroshiro128::SplitMixRng'>SplitMixRng</a>","impl <a class='trait' href='xoroshiro128/trait.SeedableRng.html' title='xoroshiro128::SeedableRng'>SeedableRng</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt; for <a class='struct' href='xoroshiro128/struct.SplitMixRng.html' title='xoroshiro128::SplitMixRng'>SplitMixRng</a>",];
+
+            if (window.register_implementors) {
+                window.register_implementors(implementors);
+            } else {
+                window.pending_implementors = implementors;
+            }
+        
+})()
