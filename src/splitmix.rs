@@ -1,3 +1,4 @@
+use std::io;
 use ::rand::{Rng, SeedableRng};
 
 pub struct SplitMixRng {
@@ -6,8 +7,29 @@ pub struct SplitMixRng {
 }
 
 impl SplitMixRng {
-    pub fn new() -> Self {
-        SplitMixRng::from_seed(())
+    /// Creates a new SplitMixRng instance which is randomly seeded.
+    ///
+    /// # Errors
+    ///
+    /// When created this way the initial values of this Rng are seeded using an OsRng. If this
+    /// fails then this method will pass through the error from OsRng.
+    ///
+    /// # Examples
+    ///
+    /// ```rust,no_run
+    /// # extern crate rand;
+    /// # extern crate xoroshiro128;
+    /// use xoroshiro128::SplitMixRng;
+    /// use rand::Rng;
+    ///
+    /// # fn main() {
+    /// let rng = SplitMixRng::new();
+    /// let x: u32 = rng.unwrap().gen();
+    /// println!("{}", x);
+    /// # }
+    /// ```
+    pub fn new() -> io::Result<Self> {
+        ::rand::OsRng::new().map(|mut x: ::rand::OsRng| x.gen::<Self>())
     }
 }
 
@@ -42,6 +64,11 @@ impl ::rand::SeedableRng<u64> for SplitMixRng {
     }
 }
 
+/// Seed a SplitMixRng based on an OsRng.
+///
+/// # Panics
+///
+/// If OsRng is unavailable then this will panic. A safer option is `SplitMixRng::new()`
 impl ::rand::SeedableRng<()> for SplitMixRng {
     fn reseed(&mut self, _: ()) {
         self.reseed(::rand::OsRng::new().unwrap().gen::<u64>())

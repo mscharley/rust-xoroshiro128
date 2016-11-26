@@ -1,3 +1,4 @@
+use std::io;
 use ::rand::{Rng, SeedableRng};
 
 pub struct XoroshiroRng {
@@ -6,10 +7,36 @@ pub struct XoroshiroRng {
 }
 
 impl XoroshiroRng {
-    pub fn new() -> Self {
-        XoroshiroRng::from_seed(())
+    /// Creates a new XoroshiroRng instance which is randomly seeded.
+    ///
+    /// # Errors
+    ///
+    /// When created this way the initial values of this Rng are seeded using an OsRng. If this
+    /// fails then this method will pass through the error from OsRng.
+    ///
+    /// # Examples
+    ///
+    /// ```rust,no_run
+    /// # extern crate rand;
+    /// # extern crate xoroshiro128;
+    /// use xoroshiro128::XoroshiroRng;
+    /// use rand::Rng;
+    ///
+    /// # fn main() {
+    /// let rng = XoroshiroRng::new();
+    /// let x: u32 = rng.unwrap().gen();
+    /// println!("{}", x);
+    /// # }
+    /// ```
+    pub fn new() -> io::Result<Self> {
+        ::rand::OsRng::new().map(|mut x: ::rand::OsRng| x.gen::<Self>())
     }
 
+    /// Creates a new XoroshiroRng instance which is not seeded.
+    ///
+    /// The initial values of this Rng are constants, so all generators created by this function
+    /// will yield the same stream of random numbers. It is highly recommended that this is created
+    /// through `SeedableRng` instead of this function.
     pub fn new_unseeded() -> Self {
         XoroshiroRng::from_seed([
             0x193a6754a8a7d469,
@@ -48,6 +75,11 @@ impl ::rand::Rng for XoroshiroRng {
     }
 }
 
+/// Seed a XoroshiroRng with a given seed.
+///
+/// # Panics
+///
+/// XoroshiroRng is undefined for the seed `[0, 0]` and will panic if this seed is provided.
 impl ::rand::SeedableRng<[u64; 2]> for XoroshiroRng {
     fn reseed(&mut self, seed: [u64; 2]) {
         assert!(seed != [0, 0], "Invalid seed: seed must not be 0.");
@@ -75,6 +107,11 @@ impl ::rand::SeedableRng<u64> for XoroshiroRng {
     }
 }
 
+/// Seed a XoroshiroRng based on an OsRng.
+///
+/// # Panics
+///
+/// If OsRng is unavailable then this will panic. A safer option is `Xoroshiro::new()`
 impl ::rand::SeedableRng<()> for XoroshiroRng {
     fn reseed(&mut self, _: ()) {
         self.reseed(::rand::OsRng::new().unwrap().gen::<[u64; 2]>())
