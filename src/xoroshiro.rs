@@ -1,5 +1,4 @@
 use ::rand::{Rng, SeedableRng};
-use ::time::get_time;
 
 pub struct XoroshiroRng {
     state : [u64; 2],
@@ -9,6 +8,13 @@ pub struct XoroshiroRng {
 impl XoroshiroRng {
     pub fn new() -> Self {
         XoroshiroRng::from_seed(())
+    }
+
+    pub fn new_unseeded() -> Self {
+        XoroshiroRng::from_seed([
+            0x193a6754a8a7d469,
+            0x97830e05113ba7bb
+        ])
     }
 }
 
@@ -71,11 +77,11 @@ impl ::rand::SeedableRng<u64> for XoroshiroRng {
 
 impl ::rand::SeedableRng<()> for XoroshiroRng {
     fn reseed(&mut self, _: ()) {
-        self.reseed(splitmix_seed(get_time().sec as u64))
+        self.reseed(::rand::OsRng::new().unwrap().gen::<[u64; 2]>())
     }
 
     fn from_seed(_: ()) -> Self {
-        XoroshiroRng::from_seed(splitmix_seed(get_time().sec as u64))
+        ::rand::OsRng::new().unwrap().gen::<Self>()
     }
 }
 
