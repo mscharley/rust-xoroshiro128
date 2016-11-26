@@ -1,6 +1,8 @@
 machine:
   environment:
     RUST_VERSION: 1.13.0
+    GIT_COMMITTER_NAME: "CircleCI"
+    GIT_COMMITTER_EMAIL: "matt.scharley+circleci@gmail.com"
 
 checkout:
   post:
@@ -29,12 +31,10 @@ deployment:
       - git worktree add -b gh-pages target/doc origin/gh-pages
       - cp circle.yml target/doc/
       - cargo doc --no-deps
-      - 'git config user.name "CircleCI" && git config user.email "matt.scharley+circleci@gmail.com"'
       - 'cd target/doc && git add . && git commit -m "Updated documentation build." && git push origin gh-pages'
   crate:
     tag: /[0-9]+\.[0-9]+\.[0-9]+/
     commands:
-      - 'git config user.name "CircleCI" && git config user.email "matt.scharley+circleci@gmail.com"'
       - sed -i -e "s/version = .*/version = '$CIRCLE_TAG'/" Cargo.toml && git commit Cargo.toml -m "Update version."
       - cargo login $CARGO_TOKEN
       - cargo publish
