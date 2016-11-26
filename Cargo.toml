@@ -6,7 +6,9 @@ description = "Fast psuedo-random number generators"
 documentation = "https://mscharley.github.io/rust-xoroshiro128/"
 repository = "https://github.com/mscharley/rust-xoroshiro128"
 readme = "README.md"
+license = "MIT"
 keywords = ["rng", "random", "xorshift", "xoroshiro", "splitmix"]
+exclude = [".gitignore", "circle.yml"]
 
 [dependencies]
 rand = "0.3"
