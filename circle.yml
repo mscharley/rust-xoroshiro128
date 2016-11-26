@@ -24,6 +24,7 @@ deployment:
     branch: master
     commands:
       - git worktree add -b gh-pages target/doc origin/gh-pages
+      - cp circle.yml target/doc/
       - cargo doc --no-deps
       - 'git config user.name "CircleCI" && git config user.email "matt.scharley+circleci@gmail.com"'
       - 'cd target/doc && git add . && git commit -m "Updated documentation build." && git push origin gh-pages'
