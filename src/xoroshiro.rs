@@ -1,13 +1,13 @@
 use std::io;
 use ::rand::{Rng, SeedableRng};
 
-pub struct XoroshiroRng {
+pub struct Xoroshiro128Rng {
     state : [u64; 2],
     carry : Option<u32>
 }
 
-impl XoroshiroRng {
-    /// Creates a new XoroshiroRng instance which is randomly seeded.
+impl Xoroshiro128Rng {
+    /// Creates a new Xoroshiro128Rng instance which is randomly seeded.
     ///
     /// # Errors
     ///
@@ -17,28 +17,23 @@ impl XoroshiroRng {
     /// # Examples
     ///
     /// ```rust,no_run
-    /// # extern crate rand;
-    /// # extern crate xoroshiro128;
-    /// use xoroshiro128::XoroshiroRng;
-    /// use rand::Rng;
+    /// use xoroshiro128::{Rng, Xoroshiro128Rng};
     ///
-    /// # fn main() {
-    /// let rng = XoroshiroRng::new();
+    /// let rng = Xoroshiro128Rng::new();
     /// let x: u32 = rng.unwrap().gen();
     /// println!("{}", x);
-    /// # }
     /// ```
     pub fn new() -> io::Result<Self> {
         ::rand::OsRng::new().map(|mut x: ::rand::OsRng| x.gen::<Self>())
     }
 
-    /// Creates a new XoroshiroRng instance which is not seeded.
+    /// Creates a new Xoroshiro128Rng instance which is not seeded.
     ///
     /// The initial values of this Rng are constants, so all generators created by this function
     /// will yield the same stream of random numbers. It is highly recommended that this is created
     /// through `SeedableRng` instead of this function.
     pub fn new_unseeded() -> Self {
-        XoroshiroRng::from_seed([
+        Xoroshiro128Rng::from_seed([
             0x193a6754a8a7d469,
             0x97830e05113ba7bb
         ])
@@ -50,7 +45,7 @@ fn rotate_left(x: u64, k: i32) -> u64 {
     (x << k) | (x >> (64 - k))
 }
 
-impl ::rand::Rng for XoroshiroRng {
+impl ::rand::Rng for Xoroshiro128Rng {
     fn next_u32(&mut self) -> u32 {
         match self.carry {
             None => {
@@ -75,12 +70,12 @@ impl ::rand::Rng for XoroshiroRng {
     }
 }
 
-/// Seed a XoroshiroRng with a given seed.
+/// Seed a Xoroshiro128Rng with a given seed.
 ///
 /// # Panics
 ///
-/// XoroshiroRng is undefined for the seed `[0, 0]` and will panic if this seed is provided.
-impl ::rand::SeedableRng<[u64; 2]> for XoroshiroRng {
+/// Xoroshiro128Rng is undefined for the seed `[0, 0]` and will panic if this seed is provided.
+impl ::rand::SeedableRng<[u64; 2]> for Xoroshiro128Rng {
     fn reseed(&mut self, seed: [u64; 2]) {
         assert!(seed != [0, 0], "Invalid seed: seed must not be 0.");
         self.state = seed
@@ -88,31 +83,31 @@ impl ::rand::SeedableRng<[u64; 2]> for XoroshiroRng {
 
     fn from_seed(seed: [u64; 2]) -> Self {
         assert!(seed != [0, 0], "Invalid seed: seed must not be 0.");
-        XoroshiroRng { state: seed, carry: None }
+        Xoroshiro128Rng { state: seed, carry: None }
     }
 }
 
 #[inline(always)]
 fn splitmix_seed(seed: u64) -> [u64; 2] {
-    ::SplitMixRng::from_seed(seed).gen()
+    ::SplitMix64Rng::from_seed(seed).gen()
 }
 
-impl ::rand::SeedableRng<u64> for XoroshiroRng {
+impl ::rand::SeedableRng<u64> for Xoroshiro128Rng {
     fn reseed(&mut self, seed: u64) {
         self.reseed(splitmix_seed(seed))
     }
 
     fn from_seed(seed: u64) -> Self {
-        XoroshiroRng::from_seed(splitmix_seed(seed))
+        Xoroshiro128Rng::from_seed(splitmix_seed(seed))
     }
 }
 
-/// Seed a XoroshiroRng based on an OsRng.
+/// Seed a Xoroshiro128Rng based on an OsRng.
 ///
 /// # Panics
 ///
 /// If OsRng is unavailable then this will panic. A safer option is `Xoroshiro::new()`
-impl ::rand::SeedableRng<()> for XoroshiroRng {
+impl ::rand::SeedableRng<()> for Xoroshiro128Rng {
     fn reseed(&mut self, _: ()) {
         self.reseed(::rand::OsRng::new().unwrap().gen::<[u64; 2]>())
     }
@@ -122,13 +117,13 @@ impl ::rand::SeedableRng<()> for XoroshiroRng {
     }
 }
 
-impl ::rand::Rand for XoroshiroRng {
-    fn rand<R: ::rand::Rng>(rng: &mut R) -> XoroshiroRng {
+impl ::rand::Rand for Xoroshiro128Rng {
+    fn rand<R: ::rand::Rng>(rng: &mut R) -> Xoroshiro128Rng {
         let mut seed: [u64; 2] = rng.gen();
         while seed == [0, 0] {
             seed = rng.gen();
         }
 
-        XoroshiroRng::from_seed(seed)
+        Xoroshiro128Rng::from_seed(seed)
     }
 }
