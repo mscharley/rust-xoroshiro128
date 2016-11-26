@@ -60,6 +60,8 @@
 <span id="16">16</span>
 <span id="17">17</span>
 <span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Utilities for generating psuedo-random numbers quickly.</span>
 
@@ -72,10 +74,12 @@
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>rand</span>::{<span class='ident'>Rng</span>, <span class='ident'>SeedableRng</span>, <span class='ident'>Rand</span>};
 
 <span class='kw'>mod</span> <span class='ident'>xoroshiro</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>xoroshiro</span>::<span class='ident'>XoroshiroRng</span>;
-
+<span class='kw'>mod</span> <span class='ident'>xorshift</span>;
 <span class='kw'>mod</span> <span class='ident'>splitmix</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>splitmix</span>::<span class='ident'>SplitMixRng</span>;
+
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>xoroshiro</span>::<span class='ident'>Xoroshiro128Rng</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>xorshift</span>::<span class='ident'>XorShift1024Rng</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>splitmix</span>::<span class='ident'>SplitMix64Rng</span>;
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span>;

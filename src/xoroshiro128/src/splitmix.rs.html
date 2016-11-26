@@ -115,105 +115,79 @@
 <span id="71">71</span>
 <span id="72">72</span>
 <span id="73">73</span>
-<span id="74">74</span>
-<span id="75">75</span>
-<span id="76">76</span>
-<span id="77">77</span>
-<span id="78">78</span>
-<span id="79">79</span>
-<span id="80">80</span>
-<span id="81">81</span>
-<span id="82">82</span>
-<span id="83">83</span>
-<span id="84">84</span>
-<span id="85">85</span>
-<span id="86">86</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
-<span class='kw'>use</span> ::<span class='ident'>rand</span>::{<span class='ident'>Rng</span>, <span class='ident'>SeedableRng</span>};
+<span class='kw'>use</span> {<span class='ident'>Rng</span>, <span class='ident'>SeedableRng</span>, <span class='ident'>Rand</span>};
 
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SplitMixRng</span> {
-    <span class='ident'>state</span> : <span class='ident'>u64</span>,
-    <span class='ident'>carry</span> : <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u32</span><span class='op'>&gt;</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SplitMix64Rng</span> {
+  <span class='ident'>state</span>: <span class='ident'>u64</span>
 }
 
-<span class='kw'>impl</span> <span class='ident'>SplitMixRng</span> {
-    <span class='doccomment'>/// Creates a new SplitMixRng instance which is randomly seeded.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Errors</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// When created this way the initial values of this Rng are seeded using an OsRng. If this</span>
-    <span class='doccomment'>/// fails then this method will pass through the error from OsRng.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust,no_run</span>
-    <span class='doccomment'>/// # extern crate rand;</span>
-    <span class='doccomment'>/// # extern crate xoroshiro128;</span>
-    <span class='doccomment'>/// use xoroshiro128::SplitMixRng;</span>
-    <span class='doccomment'>/// use rand::Rng;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # fn main() {</span>
-    <span class='doccomment'>/// let rng = SplitMixRng::new();</span>
-    <span class='doccomment'>/// let x: u32 = rng.unwrap().gen();</span>
-    <span class='doccomment'>/// println!(&quot;{}&quot;, x);</span>
-    <span class='doccomment'>/// # }</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
-        ::<span class='ident'>rand</span>::<span class='ident'>OsRng</span>::<span class='ident'>new</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>mut</span> <span class='ident'>x</span>: ::<span class='ident'>rand</span>::<span class='ident'>OsRng</span><span class='op'>|</span> <span class='ident'>x</span>.<span class='ident'>gen</span>::<span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>())
-    }
+<span class='kw'>impl</span> <span class='ident'>SplitMix64Rng</span> {
+  <span class='doccomment'>/// Creates a new SplitMix64Rng instance which is randomly seeded.</span>
+  <span class='doccomment'>///</span>
+  <span class='doccomment'>/// # Errors</span>
+  <span class='doccomment'>///</span>
+  <span class='doccomment'>/// When created this way the initial values of this Rng are seeded using an OsRng. If this</span>
+  <span class='doccomment'>/// fails then this method will pass through the error from OsRng.</span>
+  <span class='doccomment'>///</span>
+  <span class='doccomment'>/// # Examples</span>
+  <span class='doccomment'>///</span>
+  <span class='doccomment'>/// ```rust,no_run</span>
+  <span class='doccomment'>/// use xoroshiro128::{Rng, SplitMix64Rng};</span>
+  <span class='doccomment'>///</span>
+  <span class='doccomment'>/// let rng = SplitMix64Rng::new();</span>
+  <span class='doccomment'>/// let x: u32 = rng.unwrap().gen();</span>
+  <span class='doccomment'>/// println!(&quot;{}&quot;, x);</span>
+  <span class='doccomment'>/// ```</span>
+  <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    ::<span class='ident'>rand</span>::<span class='ident'>OsRng</span>::<span class='ident'>new</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>mut</span> <span class='ident'>x</span>: ::<span class='ident'>rand</span>::<span class='ident'>OsRng</span><span class='op'>|</span> <span class='ident'>x</span>.<span class='ident'>gen</span>::<span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>())
+  }
 }
 
-<span class='kw'>impl</span> ::<span class='ident'>rand</span>::<span class='ident'>Rng</span> <span class='kw'>for</span> <span class='ident'>SplitMixRng</span> {
-    <span class='kw'>fn</span> <span class='ident'>next_u32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>carry</span> {
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>next_u64</span>();
-                <span class='self'>self</span>.<span class='ident'>carry</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>((<span class='ident'>x</span> <span class='op'>&gt;&gt;</span> <span class='number'>32</span>) <span class='kw'>as</span> <span class='ident'>u32</span>);
-                <span class='ident'>x</span> <span class='kw'>as</span> <span class='ident'>u32</span>
-            },
-            <span class='prelude-val'>Some</span>(<span class='ident'>x</span>) <span class='op'>=&gt;</span> { <span class='self'>self</span>.<span class='ident'>carry</span> <span class='op'>=</span> <span class='prelude-val'>None</span>; <span class='ident'>x</span> }
-        }
-    }
+<span class='kw'>impl</span> <span class='ident'>Rng</span> <span class='kw'>for</span> <span class='ident'>SplitMix64Rng</span> {
+  <span class='kw'>fn</span> <span class='ident'>next_u32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
+    <span class='self'>self</span>.<span class='ident'>next_u64</span>() <span class='kw'>as</span> <span class='ident'>u32</span>
+  }
 
-    <span class='kw'>fn</span> <span class='ident'>next_u64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
-        <span class='self'>self</span>.<span class='ident'>state</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>state</span>.<span class='ident'>wrapping_add</span>(<span class='number'>0x9E3779B97F4A7C15</span>);
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>z</span> : <span class='ident'>u64</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>state</span>;
-        <span class='ident'>z</span> <span class='op'>=</span> (<span class='ident'>z</span> <span class='op'>^</span> (<span class='ident'>z</span> <span class='op'>&gt;&gt;</span> <span class='number'>30</span>)).<span class='ident'>wrapping_mul</span>(<span class='number'>0xBF58476D1CE4E5B9</span>);
-        <span class='ident'>z</span> <span class='op'>=</span> (<span class='ident'>z</span> <span class='op'>^</span> (<span class='ident'>z</span> <span class='op'>&gt;&gt;</span> <span class='number'>27</span>)).<span class='ident'>wrapping_mul</span>(<span class='number'>0x94D049BB133111EB</span>);
-        <span class='ident'>z</span> <span class='op'>^</span> (<span class='ident'>z</span> <span class='op'>&gt;&gt;</span> <span class='number'>31</span>)
-    }
+  <span class='kw'>fn</span> <span class='ident'>next_u64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
+    <span class='self'>self</span>.<span class='ident'>state</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>state</span>.<span class='ident'>wrapping_add</span>(<span class='number'>0x9E3779B97F4A7C15</span>);
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>z</span>: <span class='ident'>u64</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>state</span>;
+    <span class='ident'>z</span> <span class='op'>=</span> (<span class='ident'>z</span> <span class='op'>^</span> (<span class='ident'>z</span> <span class='op'>&gt;&gt;</span> <span class='number'>30</span>)).<span class='ident'>wrapping_mul</span>(<span class='number'>0xBF58476D1CE4E5B9</span>);
+    <span class='ident'>z</span> <span class='op'>=</span> (<span class='ident'>z</span> <span class='op'>^</span> (<span class='ident'>z</span> <span class='op'>&gt;&gt;</span> <span class='number'>27</span>)).<span class='ident'>wrapping_mul</span>(<span class='number'>0x94D049BB133111EB</span>);
+    <span class='ident'>z</span> <span class='op'>^</span> (<span class='ident'>z</span> <span class='op'>&gt;&gt;</span> <span class='number'>31</span>)
+  }
 }
 
-<span class='kw'>impl</span> ::<span class='ident'>rand</span>::<span class='ident'>SeedableRng</span><span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SplitMixRng</span> {
-    <span class='kw'>fn</span> <span class='ident'>reseed</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>seed</span>: <span class='ident'>u64</span>) {
-        <span class='self'>self</span>.<span class='ident'>state</span> <span class='op'>=</span> <span class='ident'>seed</span>
-    }
+<span class='kw'>impl</span> <span class='ident'>SeedableRng</span><span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SplitMix64Rng</span> {
+  <span class='kw'>fn</span> <span class='ident'>reseed</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>seed</span>: <span class='ident'>u64</span>) {
+    <span class='self'>self</span>.<span class='ident'>state</span> <span class='op'>=</span> <span class='ident'>seed</span>
+  }
 
-    <span class='kw'>fn</span> <span class='ident'>from_seed</span>(<span class='ident'>seed</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='ident'>SplitMixRng</span> { <span class='ident'>state</span>: <span class='ident'>seed</span>, <span class='ident'>carry</span>: <span class='prelude-val'>None</span> }
-    }
+  <span class='kw'>fn</span> <span class='ident'>from_seed</span>(<span class='ident'>seed</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+    <span class='ident'>SplitMix64Rng</span> { <span class='ident'>state</span>: <span class='ident'>seed</span> }
+  }
 }
 
-<span class='doccomment'>/// Seed a SplitMixRng based on an OsRng.</span>
+<span class='doccomment'>/// Seed a SplitMix64Rng based on an OsRng.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// # Panics</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// If OsRng is unavailable then this will panic. A safer option is `SplitMixRng::new()`</span>
-<span class='kw'>impl</span> ::<span class='ident'>rand</span>::<span class='ident'>SeedableRng</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SplitMixRng</span> {
-    <span class='kw'>fn</span> <span class='ident'>reseed</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, _: ()) {
-        <span class='self'>self</span>.<span class='ident'>reseed</span>(::<span class='ident'>rand</span>::<span class='ident'>OsRng</span>::<span class='ident'>new</span>().<span class='ident'>unwrap</span>().<span class='ident'>gen</span>::<span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span>())
-    }
+<span class='doccomment'>/// If OsRng is unavailable then this will panic. A safer option is `SplitMix64Rng::new()`</span>
+<span class='kw'>impl</span> <span class='ident'>SeedableRng</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SplitMix64Rng</span> {
+  <span class='kw'>fn</span> <span class='ident'>reseed</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, _: ()) {
+    <span class='self'>self</span>.<span class='ident'>reseed</span>(::<span class='ident'>rand</span>::<span class='ident'>OsRng</span>::<span class='ident'>new</span>().<span class='ident'>unwrap</span>().<span class='ident'>gen</span>::<span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span>())
+  }
 
-    <span class='kw'>fn</span> <span class='ident'>from_seed</span>(_: ()) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        ::<span class='ident'>rand</span>::<span class='ident'>OsRng</span>::<span class='ident'>new</span>().<span class='ident'>unwrap</span>().<span class='ident'>gen</span>::<span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>()
-    }
+  <span class='kw'>fn</span> <span class='ident'>from_seed</span>(_: ()) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+    ::<span class='ident'>rand</span>::<span class='ident'>OsRng</span>::<span class='ident'>new</span>().<span class='ident'>unwrap</span>().<span class='ident'>gen</span>::<span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>()
+  }
 }
 
-<span class='kw'>impl</span> ::<span class='ident'>rand</span>::<span class='ident'>Rand</span> <span class='kw'>for</span> <span class='ident'>SplitMixRng</span> {
-    <span class='kw'>fn</span> <span class='ident'>rand</span><span class='op'>&lt;</span><span class='ident'>R</span>: ::<span class='ident'>rand</span>::<span class='ident'>Rng</span><span class='op'>&gt;</span>(<span class='ident'>rng</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>R</span>) <span class='op'>-&gt;</span> <span class='ident'>SplitMixRng</span> {
-        <span class='ident'>SplitMixRng</span>::<span class='ident'>from_seed</span>(<span class='ident'>rng</span>.<span class='ident'>gen</span>::<span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span>())
-    }
+<span class='kw'>impl</span> <span class='ident'>Rand</span> <span class='kw'>for</span> <span class='ident'>SplitMix64Rng</span> {
+  <span class='kw'>fn</span> <span class='ident'>rand</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Rng</span><span class='op'>&gt;</span>(<span class='ident'>rng</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>R</span>) <span class='op'>-&gt;</span> <span class='ident'>SplitMix64Rng</span> {
+    <span class='ident'>SplitMix64Rng</span>::<span class='ident'>from_seed</span>(<span class='ident'>rng</span>.<span class='ident'>gen</span>::<span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span>())
+  }
 }
 </pre>
 </section>
