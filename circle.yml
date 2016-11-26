@@ -34,7 +34,8 @@ deployment:
   crate:
     tag: /[0-9]+\.[0-9]+\.[0-9]+/
     commands:
-      - sed -i -e "s/version = .*/version = '$CIRCLE_TAG'/" Cargo.toml
+      - 'git config user.name "CircleCI" && git config user.email "matt.scharley+circleci@gmail.com"'
+      - sed -i -e "s/version = .*/version = '$CIRCLE_TAG'/" Cargo.toml && git commit Cargo.toml -m "Update version."
       - cargo login $CARGO_TOKEN
       - cargo publish
 
