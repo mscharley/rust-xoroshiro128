@@ -1,9 +1,8 @@
 use std::io;
-use ::rand::{Rng, SeedableRng};
+use {Rng, SeedableRng, Rand};
 
 pub struct SplitMix64Rng {
-  state: u64,
-  carry: Option<u32>
+  state: u64
 }
 
 impl SplitMix64Rng {
@@ -28,19 +27,9 @@ impl SplitMix64Rng {
   }
 }
 
-impl ::rand::Rng for SplitMix64Rng {
+impl Rng for SplitMix64Rng {
   fn next_u32(&mut self) -> u32 {
-    match self.carry {
-      None => {
-        let x = self.next_u64();
-        self.carry = Some((x >> 32) as u32);
-        x as u32
-      },
-      Some(x) => {
-        self.carry = None;
-        x
-      }
-    }
+    self.next_u64() as u32
   }
 
   fn next_u64(&mut self) -> u64 {
@@ -52,13 +41,13 @@ impl ::rand::Rng for SplitMix64Rng {
   }
 }
 
-impl ::rand::SeedableRng<u64> for SplitMix64Rng {
+impl SeedableRng<u64> for SplitMix64Rng {
   fn reseed(&mut self, seed: u64) {
     self.state = seed
   }
 
   fn from_seed(seed: u64) -> Self {
-    SplitMix64Rng { state: seed, carry: None }
+    SplitMix64Rng { state: seed }
   }
 }
 
@@ -67,7 +56,7 @@ impl ::rand::SeedableRng<u64> for SplitMix64Rng {
 /// # Panics
 ///
 /// If OsRng is unavailable then this will panic. A safer option is `SplitMix64Rng::new()`
-impl ::rand::SeedableRng<()> for SplitMix64Rng {
+impl SeedableRng<()> for SplitMix64Rng {
   fn reseed(&mut self, _: ()) {
     self.reseed(::rand::OsRng::new().unwrap().gen::<u64>())
   }
@@ -77,8 +66,8 @@ impl ::rand::SeedableRng<()> for SplitMix64Rng {
   }
 }
 
-impl ::rand::Rand for SplitMix64Rng {
-  fn rand<R: ::rand::Rng>(rng: &mut R) -> SplitMix64Rng {
+impl Rand for SplitMix64Rng {
+  fn rand<R: Rng>(rng: &mut R) -> SplitMix64Rng {
     SplitMix64Rng::from_seed(rng.gen::<u64>())
   }
 }

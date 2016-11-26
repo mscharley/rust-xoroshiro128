@@ -1,5 +1,4 @@
-use ::rand::{Rng, SeedableRng};
-use ::Xoroshiro128Rng;
+use {Rng, SeedableRng, Xoroshiro128Rng};
 
 fn test_xoro_sequence(lo: u64, hi: u64, sequence: &[u64]) {
   let mut rng = Xoroshiro128Rng::from_seed([lo, hi]);
@@ -7,29 +6,6 @@ fn test_xoro_sequence(lo: u64, hi: u64, sequence: &[u64]) {
   for i in sequence {
     assert_eq!(rng.gen::<u64>(), *i);
   };
-}
-
-#[test]
-fn it_works_u32() {
-  let mut rng = Xoroshiro128Rng::from_seed([10u64, 20u64]);
-
-  // First 64b number is always a + b from the initial state.
-  let x: u32 = rng.gen();
-  assert_eq!(x, 30);
-  let x: u32 = rng.gen();
-  assert_eq!(x, 0);
-}
-
-#[test]
-fn it_works_u64() {
-  let mut rng = Xoroshiro128Rng::from_seed([10u64, 20u64]);
-
-  // First 64b number is always a + b from the initial state.
-  let x: u64 = rng.gen();
-  assert_eq!(x, 30);
-  // This is where the real randomness begins...
-  let x: u64 = rng.gen();
-  assert_eq!(x, 360290031774433310);
 }
 
 #[test]

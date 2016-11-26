@@ -1,5 +1,4 @@
-use ::rand::{Rng, SeedableRng};
-use ::SplitMix64Rng;
+use {Rng, SeedableRng, SplitMix64Rng};
 
 fn test_sm_sequence(seed: u64, sequence: &[u64]) {
   let mut rng = SplitMix64Rng::from_seed(seed);

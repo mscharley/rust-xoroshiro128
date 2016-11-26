@@ -9,11 +9,11 @@ extern crate rand;
 pub use rand::{Rng, SeedableRng, Rand};
 
 mod xoroshiro;
-
-pub use xoroshiro::Xoroshiro128Rng;
-
+mod xorshift;
 mod splitmix;
 
+pub use xoroshiro::Xoroshiro128Rng;
+pub use xorshift::XorShift1024Rng;
 pub use splitmix::SplitMix64Rng;
 
 #[cfg(test)]
