@@ -8,6 +8,8 @@ checkout:
   post:
     # Work around some silly configuration added by Circle that doesn't actually even do what they want it to.
     - git config --global --unset url.ssh://git@github.com:.insteadof
+    # Variables don't seem to be exported so processes can't see them by default.
+    - git config --global user.name "$GIT_COMMITTER_NAME" && git config --global user.email "$GIT_COMMITTER_EMAIL"
 
 dependencies:
   post:
