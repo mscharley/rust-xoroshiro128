@@ -1,7 +1,14 @@
 [package]
 name = "xoroshiro128"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["Matthew Scharley <matt.scharley@gmail.com>"]
+description = "Fast psuedo-random number generators"
+documentation = "https://mscharley.github.io/rust-xoroshiro128/"
+repository = "https://github.com/mscharley/rust-xoroshiro128"
+readme = "README.md"
+license = "MIT"
+keywords = ["rng", "random", "xorshift", "xoroshiro", "splitmix"]
+exclude = [".gitignore", "circle.yml"]
 
 [dependencies]
 rand = "0.3"

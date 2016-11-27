@@ -1,23 +1,30 @@
 machine:
   environment:
     RUST_VERSION: 1.13.0
+    GIT_COMMITTER_NAME: "CircleCI"
+    GIT_COMMITTER_EMAIL: "matt.scharley+circleci@gmail.com"
 
 checkout:
   post:
     # Work around some silly configuration added by Circle that doesn't actually even do what they want it to.
     - git config --global --unset url.ssh://git@github.com:.insteadof
+    # Variables don't seem to be exported so processes can't see them by default.
+    - git config --global user.name "$GIT_COMMITTER_NAME" && git config --global user.email "$GIT_COMMITTER_EMAIL"
 
 dependencies:
   post:
     - mkdir -p ~/cache/
     - 'if [[ ! -f ~/cache/rust-$RUST_VERSION.tar.gz ]]; then curl -SsL https://static.rust-lang.org/dist/rust-$RUST_VERSION-x86_64-unknown-linux-gnu.tar.gz -o ~/cache/rust-$RUST_VERSION.tar.gz; fi'
     - 'mkdir -p ~/opt/rust-$RUST_VERSION && cd ~/opt/rust-$RUST_VERSION && tar -xz -f ~/cache/rust-$RUST_VERSION.tar.gz --strip-components 1 && chmod a+x install.sh && ./install.sh --prefix=$HOME'
+    - 'cargo build --locked'
   cache_directories:
     - ~/cache/
+    - ~/.cargo/
 
 test:
   override:
     - cargo test --locked
+    - cargo bench --locked
 
 deployment:
   documentation:
@@ -26,8 +33,13 @@ deployment:
       - git worktree add -b gh-pages target/doc origin/gh-pages
       - cp circle.yml target/doc/
       - cargo doc --no-deps
-      - 'git config user.name "CircleCI" && git config user.email "matt.scharley+circleci@gmail.com"'
-      - 'cd target/doc && git add . && git commit -m "Updated documentation build." && git push origin gh-pages'
+      - 'cd target/doc && if [[ $(( `git diff --name-only | wc -l` )) -ne 0 ]]; then git add . && git commit -m "Updated documentation build." && git push origin gh-pages; fi'
+  crate:
+    tag: /[0-9]+\.[0-9]+\.[0-9]+/
+    commands:
+      - sed -i -e "s/version = .*/version = '$CIRCLE_TAG'/" Cargo.toml && git commit Cargo.toml -m "Update version."
+      - cargo login $CARGO_TOKEN
+      - cargo publish
 
 general:
   branches:
