@@ -1,6 +1,7 @@
 use std::io;
 use {Rng, SeedableRng, Rand};
 
+#[derive(Debug, Clone, Copy)]
 pub struct Xoroshiro128Rng {
   state: [u64; 2]
 }

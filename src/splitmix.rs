@@ -1,6 +1,7 @@
 use std::io;
 use {Rng, SeedableRng, Rand};
 
+#[derive(Debug, Clone, Copy)]
 pub struct SplitMix64Rng {
   state: u64
 }
