@@ -163,10 +163,12 @@
 <span id="119">119</span>
 <span id="120">120</span>
 <span id="121">121</span>
+<span id="122">122</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
 <span class='kw'>use</span> {<span class='ident'>Rng</span>, <span class='ident'>SeedableRng</span>, <span class='ident'>Rand</span>};
 
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Xoroshiro128Rng</span> {
   <span class='ident'>state</span>: [<span class='ident'>u64</span>; <span class='number'>2</span>]
 }
