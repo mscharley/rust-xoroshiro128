@@ -3,6 +3,7 @@ use {Rng, SeedableRng, Rand};
 
 const ZERO_SEED: [u64; 16] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
+#[derive(Debug, Clone, Copy)]
 pub struct XorShift1024Rng {
   state: [u64; 16],
   pointer: usize
