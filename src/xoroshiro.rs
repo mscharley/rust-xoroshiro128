@@ -40,11 +40,6 @@ impl Xoroshiro128Rng {
   }
 }
 
-#[inline(always)]
-fn rotate_left(x: u64, k: i32) -> u64 {
-  (x << k) | (x >> (64 - k))
-}
-
 impl Rng for Xoroshiro128Rng {
   fn next_u32(&mut self) -> u32 {
     self.next_u64() as u32
@@ -56,8 +51,8 @@ impl Rng for Xoroshiro128Rng {
     let result: u64 = s0.wrapping_add(s1);
 
     s1 ^= s0;
-    self.state[0] = rotate_left(s0, 55) ^ s1 ^ (s1 << 14); // a, b
-    self.state[1] = rotate_left(s1, 36); // c
+    self.state[0] = s0.rotate_left(55) ^ s1 ^ (s1 << 14); // a, b
+    self.state[1] = s1.rotate_left(36); // c
 
     result
   }
