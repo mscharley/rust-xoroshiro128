@@ -47,10 +47,39 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1486' class='srclink' href='https://doc.rust-lang.org/rand/rand/trait.Rand.html?gotosrc=1486' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-1980' class='srclink' href='https://docs.rs/rand/0.3/rand/trait.Rand.html?gotosrc=1980' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Rand {
     fn <a href='#tymethod.rand' class='fnname'>rand</a>&lt;R&gt;(rng: &amp;mut R) -&gt; Self <span class='where'>where R: <a class='trait' href='../xoroshiro128/trait.Rng.html' title='xoroshiro128::Rng'>Rng</a></span>;
 }</pre><div class='docblock'><p>A type that can be randomly generated using an <code>Rng</code>.</p>
+
+<h2 id='built-in-implementations' class='section-header'><a href='#built-in-implementations'>Built-in Implementations</a></h2>
+<p>This crate implements <code>Rand</code> for various primitive types.  Assuming the
+provided <code>Rng</code> is well-behaved, these implementations generate values with
+the following ranges and distributions:</p>
+
+<ul>
+<li>Integers (<code>i32</code>, <code>u32</code>, <code>isize</code>, <code>usize</code>, etc.): Uniformly distributed
+over all values of the type.</li>
+<li><code>char</code>: Uniformly distributed over all Unicode scalar values, i.e. all
+code points in the range <code>0...0x10_FFFF</code>, except for the range
+<code>0xD800...0xDFFF</code> (the surrogate code points).  This includes
+unassigned/reserved code points.</li>
+<li><code>bool</code>: Generates <code>false</code> or <code>true</code>, each with probability 0.5.</li>
+<li>Floating point types (<code>f32</code> and <code>f64</code>): Uniformly distributed in the
+half-open range <code>[0, 1)</code>.  (The <a href="struct.Open01.html"><code>Open01</code></a>, <a href="struct.Closed01.html"><code>Closed01</code></a>, <a href="distributions/exponential/struct.Exp1.html"><code>Exp1</code></a>, and
+<a href="distributions/normal/struct.StandardNormal.html"><code>StandardNormal</code></a> wrapper types produce floating point numbers with
+alternative ranges or distributions.)</li>
+</ul>
+
+<p>The following aggregate types also implement <code>Rand</code> as long as their
+component types implement it:</p>
+
+<ul>
+<li>Tuples and arrays: Each element of the tuple or array is generated
+independently, using its own <code>Rand</code> implementation.</li>
+<li><code>Option&lt;T&gt;</code>: Returns <code>None</code> with probability 0.5; otherwise generates a
+random <code>T</code> and returns <code>Some(T)</code>.</li>
+</ul>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
@@ -59,11 +88,8 @@ randomness.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl Rand for <a class='struct' href='https://doc.rust-lang.org/rand/rand/distributions/normal/struct.StandardNormal.html' title='rand::distributions::normal::StandardNormal'>StandardNormal</a></code></li>
-<li><code>impl Rand for <a class='struct' href='https://doc.rust-lang.org/rand/rand/distributions/exponential/struct.Exp1.html' title='rand::distributions::exponential::Exp1'>Exp1</a></code></li>
-<li><code>impl Rand for <a class='struct' href='https://doc.rust-lang.org/rand/rand/isaac/struct.IsaacRng.html' title='rand::isaac::IsaacRng'>IsaacRng</a></code></li>
-<li><code>impl Rand for <a class='struct' href='https://doc.rust-lang.org/rand/rand/isaac/struct.Isaac64Rng.html' title='rand::isaac::Isaac64Rng'>Isaac64Rng</a></code></li>
-<li><code>impl Rand for <a class='struct' href='https://doc.rust-lang.org/rand/rand/chacha/struct.ChaChaRng.html' title='rand::chacha::ChaChaRng'>ChaChaRng</a></code></li>
+    <li><code>impl Rand for <a class='struct' href='https://docs.rs/rand/0.3/rand/distributions/normal/struct.StandardNormal.html' title='rand::distributions::normal::StandardNormal'>StandardNormal</a></code></li>
+<li><code>impl Rand for <a class='struct' href='https://docs.rs/rand/0.3/rand/distributions/exponential/struct.Exp1.html' title='rand::distributions::exponential::Exp1'>Exp1</a></code></li>
 <li><code>impl Rand for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.isize.html'>isize</a></code></li>
 <li><code>impl Rand for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i8.html'>i8</a></code></li>
 <li><code>impl Rand for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i16.html'>i16</a></code></li>
@@ -78,13 +104,16 @@ randomness.</p>
 <li><code>impl Rand for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></li>
 <li><code>impl Rand for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a></code></li>
 <li><code>impl&lt;T&gt; Rand for <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='../xoroshiro128/trait.Rand.html' title='xoroshiro128::Rand'>Rand</a></span></code></li>
-<li><code>impl Rand for <a class='struct' href='https://doc.rust-lang.org/rand/rand/struct.XorShiftRng.html' title='rand::XorShiftRng'>XorShiftRng</a></code></li>
+<li><code>impl Rand for <a class='struct' href='https://docs.rs/rand/0.3/rand/prng/chacha/struct.ChaChaRng.html' title='rand::prng::chacha::ChaChaRng'>ChaChaRng</a></code></li>
+<li><code>impl Rand for <a class='struct' href='https://docs.rs/rand/0.3/rand/prng/isaac/struct.IsaacRng.html' title='rand::prng::isaac::IsaacRng'>IsaacRng</a></code></li>
+<li><code>impl Rand for <a class='struct' href='https://docs.rs/rand/0.3/rand/prng/isaac64/struct.Isaac64Rng.html' title='rand::prng::isaac64::Isaac64Rng'>Isaac64Rng</a></code></li>
+<li><code>impl Rand for <a class='struct' href='https://docs.rs/rand/0.3/rand/prng/xorshift/struct.XorShiftRng.html' title='rand::prng::xorshift::XorShiftRng'>XorShiftRng</a></code></li>
 <li><code>impl Rand for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a></code></li>
-<li><code>impl Rand for <a class='struct' href='https://doc.rust-lang.org/rand/rand/struct.Open01.html' title='rand::Open01'>Open01</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a>&gt;</code></li>
-<li><code>impl Rand for <a class='struct' href='https://doc.rust-lang.org/rand/rand/struct.Closed01.html' title='rand::Closed01'>Closed01</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a>&gt;</code></li>
+<li><code>impl Rand for <a class='struct' href='https://docs.rs/rand/0.3/rand/struct.Open01.html' title='rand::Open01'>Open01</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a>&gt;</code></li>
+<li><code>impl Rand for <a class='struct' href='https://docs.rs/rand/0.3/rand/struct.Closed01.html' title='rand::Closed01'>Closed01</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a>&gt;</code></li>
 <li><code>impl Rand for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a></code></li>
-<li><code>impl Rand for <a class='struct' href='https://doc.rust-lang.org/rand/rand/struct.Open01.html' title='rand::Open01'>Open01</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;</code></li>
-<li><code>impl Rand for <a class='struct' href='https://doc.rust-lang.org/rand/rand/struct.Closed01.html' title='rand::Closed01'>Closed01</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;</code></li>
+<li><code>impl Rand for <a class='struct' href='https://docs.rs/rand/0.3/rand/struct.Open01.html' title='rand::Open01'>Open01</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;</code></li>
+<li><code>impl Rand for <a class='struct' href='https://docs.rs/rand/0.3/rand/struct.Closed01.html' title='rand::Closed01'>Closed01</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;</code></li>
 <li><code>impl&lt;A&gt; Rand for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A,<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a> <span class='where'>where A: <a class='trait' href='../xoroshiro128/trait.Rand.html' title='xoroshiro128::Rand'>Rand</a></span></code></li>
 <li><code>impl&lt;A,&nbsp;B&gt; Rand for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a> <span class='where'>where A: <a class='trait' href='../xoroshiro128/trait.Rand.html' title='xoroshiro128::Rand'>Rand</a>, B: <a class='trait' href='../xoroshiro128/trait.Rand.html' title='xoroshiro128::Rand'>Rand</a></span></code></li>
 <li><code>impl&lt;A,&nbsp;B,&nbsp;C&gt; Rand for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>A, B, C<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a> <span class='where'>where A: <a class='trait' href='../xoroshiro128/trait.Rand.html' title='xoroshiro128::Rand'>Rand</a>, B: <a class='trait' href='../xoroshiro128/trait.Rand.html' title='xoroshiro128::Rand'>Rand</a>, C: <a class='trait' href='../xoroshiro128/trait.Rand.html' title='xoroshiro128::Rand'>Rand</a></span></code></li>
