@@ -1,4 +1,4 @@
-use {Rng, RngCore, SeedableRng};
+use {RngCore, SeedableRng};
 
 #[derive(Debug, Clone, Copy)]
 pub struct SplitMix64Rng {
@@ -6,6 +6,7 @@ pub struct SplitMix64Rng {
 }
 
 impl SplitMix64Rng {
+  #[cfg(feature = "rand")]
   /// Creates a new SplitMix64Rng instance which is randomly seeded.
   ///
   /// # Errors
@@ -16,14 +17,18 @@ impl SplitMix64Rng {
   /// # Examples
   ///
   /// ```rust,no_run
-  /// use xoroshiro128::{Rng, SplitMix64Rng};
+  /// # extern crate rand; extern crate xoroshiro128; fn main() {
+  /// use rand::Rng;
+  /// use xoroshiro128::SplitMix64Rng;
   ///
-  /// let rng = SplitMix64Rng::new();
-  /// let x: u32 = rng.unwrap().gen();
+  /// let mut rng = SplitMix64Rng::new();
+  /// let x: u32 = rng.gen();
   /// println!("{}", x);
+  /// # }
   /// ```
   pub fn new() -> Self {
-    let seed = ::rand::rngs::OsRng.gen::<<Self as SeedableRng>::Seed>();
+    use rand::Rng;
+    let seed = rand::rngs::OsRng.gen::<<Self as SeedableRng>::Seed>();
     Self::from_seed(seed)
   }
 
@@ -58,7 +63,7 @@ impl RngCore for SplitMix64Rng {
       ctr -= 1;
     }
   }
-  fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), rand::Error> {
+  fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), rand_core::Error> {
     self.fill_bytes(dest);
     Ok(())
   }

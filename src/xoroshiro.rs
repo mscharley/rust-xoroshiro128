@@ -1,4 +1,4 @@
-use {Rng, SeedableRng, RngCore, u64_from_sl};
+use {SeedableRng, RngCore, u64_from_sl};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Xoroshiro128Rng {
@@ -6,6 +6,7 @@ pub struct Xoroshiro128Rng {
 }
 
 impl Xoroshiro128Rng {
+  #[cfg(feature = "rand")]
   /// Creates a new `Xoroshiro128Rng` instance which is randomly seeded.
   ///
   /// # Errors
@@ -16,14 +17,18 @@ impl Xoroshiro128Rng {
   /// # Examples
   ///
   /// ```rust,no_run
-  /// use xoroshiro128::{Rng, Xoroshiro128Rng};
+  /// # extern crate rand; extern crate xoroshiro128; fn main() {
+  /// use rand::Rng;
+  /// use xoroshiro128::Xoroshiro128Rng;
   ///
-  /// let rng = Xoroshiro128Rng::new();
-  /// let x: u32 = rng.unwrap().gen();
+  /// let mut rng = Xoroshiro128Rng::new();
+  /// let x: u32 = rng.gen();
   /// println!("{}", x);
+  /// # }
   /// ```
   pub fn new() -> Self {
-    let seed = ::rand::rngs::OsRng.gen::<<Self as SeedableRng>::Seed>();
+    use rand::Rng;
+    let seed = rand::rngs::OsRng.gen::<<Self as SeedableRng>::Seed>();
     Self::from_seed(seed)
   }
 
@@ -75,7 +80,7 @@ impl RngCore for Xoroshiro128Rng {
       ctr -= 1;
     }
   }
-  fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), rand::Error> {
+  fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), rand_core::Error> {
     self.fill_bytes(dest);
     Ok(())
   }

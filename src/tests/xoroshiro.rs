@@ -1,4 +1,5 @@
-use {Rng, SeedableRng, Xoroshiro128Rng};
+use Xoroshiro128Rng;
+use rand::Rng;
 
 fn test_xoro_sequence(lo: u64, hi: u64, sequence: &[u64]) {
   let mut rng = Xoroshiro128Rng::from_seed_u64([lo, hi]);

@@ -11,4 +11,5 @@ keywords = ["rng", "random", "xorshift", "xoroshiro", "splitmix"]
 exclude = [".gitignore", "circle.yml"]
 
 [dependencies]
-rand = "0.7"
+rand_core = "0.5"
+rand = { version = "0.7", optional = true }
