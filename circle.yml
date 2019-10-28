@@ -1,6 +1,6 @@
 machine:
   environment:
-    RUST_VERSION: 1.13.0
+    RUST_VERSION: 1.32.0
     GIT_COMMITTER_NAME: "CircleCI"
     GIT_COMMITTER_EMAIL: "matt.scharley+circleci@gmail.com"
 
@@ -24,6 +24,7 @@ dependencies:
 test:
   override:
     - cargo test --locked
+    - cargo test --features rand --locked
     - cargo bench --locked
 
 deployment:
