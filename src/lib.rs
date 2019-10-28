@@ -6,7 +6,7 @@
 
 extern crate rand;
 
-pub use rand::{Rng, SeedableRng, Rand};
+pub use rand::{Rng, SeedableRng, RngCore};
 
 mod xoroshiro;
 mod xorshift;
@@ -18,3 +18,7 @@ pub use splitmix::SplitMix64Rng;
 
 #[cfg(test)]
 mod tests;
+
+fn u64_from_sl(s: &[u8]) -> u64 {
+       u64::from_le_bytes([s[0], s[1], s[2], s[3], s[4], s[5], s[6], s[7]])
+}
