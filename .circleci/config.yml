@@ -3,7 +3,7 @@ version: 2.1
 executors:
   rust:
     docker:
-      - image: rust:1.13
+      - image: rust:1.19
 
 jobs:
   test:
