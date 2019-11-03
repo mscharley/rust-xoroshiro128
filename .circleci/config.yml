@@ -27,7 +27,7 @@ jobs:
           command: |-
             set -e
             git worktree add -b gh-pages target/doc origin/gh-pages
-            cp circle.yml target/doc/
+            cp -r .circleci target/doc/
       - run: cargo doc --no-deps
       - run:
           name: Push documentation to gh-pages
