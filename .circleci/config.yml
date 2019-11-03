@@ -8,6 +8,16 @@ executors:
       GIT_COMMITTER_NAME: "CircleCI"
       GIT_COMMITTER_EMAIL: "matt.scharley+circleci@gmail.com"
 
+commands:
+  configure_git:
+    steps:
+      - run:
+          description: "Configure git"
+          command: |-
+            set -e
+            git config --global user.name "$GIT_COMMITTER_NAME"
+            git config --global user.email "$GIT_COMMITTER_EMAIL"
+
 jobs:
   test:
     executor: rust
@@ -21,6 +31,7 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - 'ba:e4:1e:e1:08:70:d2:d1:39:dc:0e:5e:c7:b0:c4:fc'
+      - configure_git
       - checkout
       - run:
           name: Create worktree to generate into
@@ -42,6 +53,7 @@ jobs:
   crate:
     executor: rust
     steps:
+      - configure_git
       - checkout
       - run:
           name: Bump version in Cargo.toml
