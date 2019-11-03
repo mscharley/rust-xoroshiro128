@@ -1,7 +1,8 @@
-use {Rng, SeedableRng, SplitMix64Rng};
+use SplitMix64Rng;
+use rand::Rng;
 
 fn test_sm_sequence(seed: u64, sequence: &[u64]) {
-  let mut rng = SplitMix64Rng::from_seed(seed);
+  let mut rng = SplitMix64Rng::from_seed_u64(seed);
 
   for i in sequence {
     assert_eq!(rng.gen::<u64>(), *i);

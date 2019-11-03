@@ -1,12 +1,12 @@
-use std::io;
-use {Rng, SeedableRng, Rand};
+use {RngCore, SeedableRng};
 
 #[derive(Debug, Clone, Copy)]
 pub struct SplitMix64Rng {
-  state: u64
+  state: u64,
 }
 
 impl SplitMix64Rng {
+  #[cfg(feature = "rand")]
   /// Creates a new SplitMix64Rng instance which is randomly seeded.
   ///
   /// # Errors
@@ -17,18 +17,27 @@ impl SplitMix64Rng {
   /// # Examples
   ///
   /// ```rust,no_run
-  /// use xoroshiro128::{Rng, SplitMix64Rng};
+  /// # extern crate rand; extern crate xoroshiro128; fn main() {
+  /// use rand::Rng;
+  /// use xoroshiro128::SplitMix64Rng;
   ///
-  /// let rng = SplitMix64Rng::new();
-  /// let x: u32 = rng.unwrap().gen();
+  /// let mut rng = SplitMix64Rng::new();
+  /// let x: u32 = rng.gen();
   /// println!("{}", x);
+  /// # }
   /// ```
-  pub fn new() -> io::Result<Self> {
-    ::rand::OsRng::new().map(|mut x: ::rand::OsRng| x.gen::<Self>())
+  pub fn new() -> Self {
+    use rand::Rng;
+    let seed = rand::rngs::OsRng.gen::<<Self as SeedableRng>::Seed>();
+    Self::from_seed(seed)
+  }
+
+  pub fn from_seed_u64(seed: u64) -> Self {
+    SplitMix64Rng { state: seed }
   }
 }
 
-impl Rng for SplitMix64Rng {
+impl RngCore for SplitMix64Rng {
   fn next_u32(&mut self) -> u32 {
     self.next_u64() as u32
   }
@@ -40,35 +49,29 @@ impl Rng for SplitMix64Rng {
     z = (z ^ (z >> 27)).wrapping_mul(0x94D049BB133111EB);
     z ^ (z >> 31)
   }
-}
 
-impl SeedableRng<u64> for SplitMix64Rng {
-  fn reseed(&mut self, seed: u64) {
-    self.state = seed
+  fn fill_bytes(&mut self, dest: &mut [u8]) {
+    let mut ctr = 0;
+    let mut v = 0;
+    for d in dest.iter_mut() {
+      if ctr == 0 {
+        v = self.next_u64();
+        ctr = 7;
+      }
+      *d = v as u8;
+      v >>= 8;
+      ctr -= 1;
+    }
   }
-
-  fn from_seed(seed: u64) -> Self {
-    SplitMix64Rng { state: seed }
-  }
-}
-
-/// Seed a SplitMix64Rng based on an OsRng.
-///
-/// # Panics
-///
-/// If OsRng is unavailable then this will panic. A safer option is `SplitMix64Rng::new()`
-impl SeedableRng<()> for SplitMix64Rng {
-  fn reseed(&mut self, _: ()) {
-    self.reseed(::rand::OsRng::new().unwrap().gen::<u64>())
-  }
-
-  fn from_seed(_: ()) -> Self {
-    ::rand::OsRng::new().unwrap().gen::<Self>()
+  fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), rand_core::Error> {
+    self.fill_bytes(dest);
+    Ok(())
   }
 }
 
-impl Rand for SplitMix64Rng {
-  fn rand<R: Rng>(rng: &mut R) -> SplitMix64Rng {
-    SplitMix64Rng::from_seed(rng.gen::<u64>())
+impl SeedableRng for SplitMix64Rng {
+  type Seed = [u8; 8];
+  fn from_seed(seed: [u8; 8]) -> Self {
+    Self::from_seed_u64(u64::from_le_bytes(seed))
   }
 }

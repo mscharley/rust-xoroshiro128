@@ -1,5 +1,4 @@
-use std::io;
-use {Rng, SeedableRng, Rand};
+use {SeedableRng, RngCore, u64_from_sl};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Xoroshiro128Rng {
@@ -7,6 +6,7 @@ pub struct Xoroshiro128Rng {
 }
 
 impl Xoroshiro128Rng {
+  #[cfg(feature = "rand")]
   /// Creates a new `Xoroshiro128Rng` instance which is randomly seeded.
   ///
   /// # Errors
@@ -17,14 +17,19 @@ impl Xoroshiro128Rng {
   /// # Examples
   ///
   /// ```rust,no_run
-  /// use xoroshiro128::{Rng, Xoroshiro128Rng};
+  /// # extern crate rand; extern crate xoroshiro128; fn main() {
+  /// use rand::Rng;
+  /// use xoroshiro128::Xoroshiro128Rng;
   ///
-  /// let rng = Xoroshiro128Rng::new();
-  /// let x: u32 = rng.unwrap().gen();
+  /// let mut rng = Xoroshiro128Rng::new();
+  /// let x: u32 = rng.gen();
   /// println!("{}", x);
+  /// # }
   /// ```
-  pub fn new() -> io::Result<Self> {
-    ::rand::OsRng::new().map(|mut x: ::rand::OsRng| x.gen::<Self>())
+  pub fn new() -> Self {
+    use rand::Rng;
+    let seed = rand::rngs::OsRng.gen::<<Self as SeedableRng>::Seed>();
+    Self::from_seed(seed)
   }
 
   /// Creates a new `Xoroshiro128Rng` instance which is not seeded.
@@ -33,14 +38,19 @@ impl Xoroshiro128Rng {
   /// will yield the same stream of random numbers. It is highly recommended that this is created
   /// through `SeedableRng` instead of this function.
   pub fn new_unseeded() -> Self {
-    Xoroshiro128Rng::from_seed([
+    Xoroshiro128Rng::from_seed_u64([
       0x193a6754a8a7d469,
       0x97830e05113ba7bb
     ])
   }
+
+  pub fn from_seed_u64(seed: [u64; 2]) -> Self {
+    assert!(seed != [0; 2], "Invalid seed: seed must not be 0.");
+    Xoroshiro128Rng { state: seed }
+  }
 }
 
-impl Rng for Xoroshiro128Rng {
+impl RngCore for Xoroshiro128Rng {
   fn next_u32(&mut self) -> u32 {
     self.next_u64() as u32
   }
@@ -56,6 +66,24 @@ impl Rng for Xoroshiro128Rng {
 
     result
   }
+
+  fn fill_bytes(&mut self, dest: &mut [u8]) {
+    let mut ctr = 0;
+    let mut v = 0;
+    for d in dest.iter_mut() {
+      if ctr == 0 {
+        v = self.next_u64();
+        ctr = 7;
+      }
+      *d = v as u8;
+      v >>= 8;
+      ctr -= 1;
+    }
+  }
+  fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), rand_core::Error> {
+    self.fill_bytes(dest);
+    Ok(())
+  }
 }
 
 /// Seed a `Xoroshiro128Rng` with a given seed.
@@ -63,55 +91,10 @@ impl Rng for Xoroshiro128Rng {
 /// # Panics
 ///
 /// `Xoroshiro128Rng` is undefined for the seed `[0, 0]` and will panic if this seed is provided.
-impl SeedableRng<[u64; 2]> for Xoroshiro128Rng {
-  fn reseed(&mut self, seed: [u64; 2]) {
-    assert!(seed != [0, 0], "Invalid seed: seed must not be 0.");
-    self.state = seed
-  }
+impl SeedableRng for Xoroshiro128Rng {
+  type Seed = [u8; 16];
 
-  fn from_seed(seed: [u64; 2]) -> Self {
-    assert!(seed != [0, 0], "Invalid seed: seed must not be 0.");
-    Xoroshiro128Rng { state: seed }
-  }
-}
-
-#[inline(always)]
-fn splitmix_seed(seed: u64) -> [u64; 2] {
-  ::SplitMix64Rng::from_seed(seed).gen()
-}
-
-impl SeedableRng<u64> for Xoroshiro128Rng {
-  fn reseed(&mut self, seed: u64) {
-    self.reseed(splitmix_seed(seed))
-  }
-
-  fn from_seed(seed: u64) -> Self {
-    Xoroshiro128Rng::from_seed(splitmix_seed(seed))
-  }
-}
-
-/// Seed a `Xoroshiro128Rng` based on an `OsRng`.
-///
-/// # Panics
-///
-/// If `OsRng` is unavailable then this will panic. A safer option is `Xoroshiro128Rng::new()`
-impl SeedableRng<()> for Xoroshiro128Rng {
-  fn reseed(&mut self, _: ()) {
-    self.reseed(::rand::OsRng::new().unwrap().gen::<[u64; 2]>())
-  }
-
-  fn from_seed(_: ()) -> Self {
-    ::rand::OsRng::new().unwrap().gen::<Self>()
-  }
-}
-
-impl Rand for Xoroshiro128Rng {
-  fn rand<R: Rng>(rng: &mut R) -> Xoroshiro128Rng {
-    let mut seed: [u64; 2] = rng.gen();
-    while seed == [0, 0] {
-      seed = rng.gen();
-    }
-
-    Xoroshiro128Rng::from_seed(seed)
+  fn from_seed(seed: [u8; 16]) -> Self {
+    Self::from_seed_u64([u64_from_sl(&seed[..]), u64_from_sl(&seed[8..])])
   }
 }

@@ -1,7 +1,8 @@
-use {Rng, SeedableRng, XorShift1024Rng};
+use XorShift1024Rng;
+use rand::Rng;
 
 fn test_xorshift_sequence(seed: [u64; 16], sequence: &[u64]) {
-  let mut rng = XorShift1024Rng::from_seed(seed);
+  let mut rng = XorShift1024Rng::from_seed_u64(seed);
 
   for i in sequence {
     assert_eq!(rng.gen::<u64>(), *i);
