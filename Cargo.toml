@@ -1,6 +1,6 @@
 [package]
 name = "xoroshiro128"
-version = "1.0.0"
+version = "0.0.0"
 authors = ["Matthew Scharley <matt.scharley@gmail.com>"]
 description = "Fast psuedo-random number generators"
 documentation = "https://mscharley.github.io/rust-xoroshiro128/"

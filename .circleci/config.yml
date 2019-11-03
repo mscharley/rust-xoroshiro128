@@ -1,0 +1,67 @@
+version: 2.1
+
+executors:
+  rust:
+    docker:
+      - image: rust:1.38.0
+    environment:
+      GIT_COMMITTER_NAME: "CircleCI"
+      GIT_COMMITTER_EMAIL: "matt.scharley+circleci@gmail.com"
+
+jobs:
+  test:
+    executor: rust
+    steps:
+      - checkout
+      - run: cargo test --locked
+      - run: cargo bench --locked
+  docs:
+    executor: rust
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - 'ba:e4:1e:e1:08:70:d2:d1:39:dc:0e:5e:c7:b0:c4:fc'
+      - checkout
+      - run:
+          name: Create worktree to generate into
+          command: |-
+            set -e
+            git worktree add -b gh-pages target/doc origin/gh-pages
+            cp circle.yml target/doc/
+      - run: cargo doc --no-deps
+      - run:
+          name: Push documentation to gh-pages
+          command: |-
+            set -e
+            cd target/doc;
+            if [[ $(( `git diff --name-only | wc -l` )) -ne 0 ]]; then
+              git add .
+              git commit -m "Updated documentation build."
+              git push origin gh-pages;
+            fi
+  crate:
+    executor: rust
+    steps:
+      - checkout
+      - run:
+          name: Bump version in Cargo.toml
+          command: |-
+            set -e
+            sed -i -e "s/version = .*/version = '$CIRCLE_TAG'/" Cargo.toml
+            git commit Cargo.toml -m "Update version."
+      - run: cargo login $CARGO_TOKEN
+      - run: cargo publish
+
+workflows:
+  version: 2
+  test_deploy:
+    jobs:
+      - test:
+          filters: { branches: { ignore: ['master', 'gh-pages'] } }
+      - docs:
+          filters: { branches: { only: ['gh-pages'] } }
+      - crate:
+          context: "cargo-release"
+          filters:
+            branches: { ignore: '/.*/' }
+            tags: { only: ['/[0-9]+\.[0-9]+\.[0-9]+/'] }
