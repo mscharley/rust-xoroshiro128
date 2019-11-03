@@ -59,7 +59,7 @@ workflows:
       - test:
           filters: { branches: { ignore: ['master', 'gh-pages'] } }
       - docs:
-          filters: { branches: { only: ['gh-pages'] } }
+          filters: { branches: { only: ['master'] } }
       - crate:
           context: "cargo-release"
           filters:
