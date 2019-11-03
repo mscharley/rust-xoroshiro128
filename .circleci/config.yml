@@ -1,0 +1,21 @@
+version: 2.1
+
+executors:
+  rust:
+    docker:
+      - image: rust:1.13
+
+jobs:
+  test:
+    executor: rust
+    steps:
+      - checkout
+      - run: cargo test --locked
+      - run: cargo bench --locked
+
+workflows:
+  version: 2
+  test_deploy:
+    jobs:
+      - test:
+          filters: { branches: { ignore: ['gh-pages'] } }
