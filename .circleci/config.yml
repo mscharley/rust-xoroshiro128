@@ -3,7 +3,7 @@ version: 2.1
 executors:
   rust:
     docker:
-      - image: rust:1.19
+      - image: rust:1.38.0
     environment:
       GIT_COMMITTER_NAME: "CircleCI"
       GIT_COMMITTER_EMAIL: "matt.scharley+circleci@gmail.com"
