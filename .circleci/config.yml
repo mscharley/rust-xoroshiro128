@@ -12,7 +12,7 @@ commands:
   configure_git:
     steps:
       - run:
-          description: "Configure git"
+          name: "Configure git"
           command: |-
             set -e
             git config --global user.name "$GIT_COMMITTER_NAME"
@@ -59,7 +59,7 @@ jobs:
           name: Bump version in Cargo.toml
           command: |-
             set -e
-            sed -i -e "s/version = .*/version = '$CIRCLE_TAG'/" Cargo.toml
+            sed -i -e "s/^version = .*/version = '$CIRCLE_TAG'/" Cargo.toml
             git commit Cargo.toml -m "Update version."
       - run: cargo login $CARGO_TOKEN
       - run: cargo publish
