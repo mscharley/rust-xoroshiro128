@@ -200,7 +200,7 @@
   }
 }
 
-<span class="kw">impl</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">AsMut</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">XorShift1024Seed</span> {
+<span class="kw">impl</span> <span class="ident">core</span>::<span class="ident">convert</span>::<span class="ident">AsMut</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">XorShift1024Seed</span> {
   <span class="kw">fn</span> <span class="ident">as_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>] {
     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="number">0</span>[..]
   }
