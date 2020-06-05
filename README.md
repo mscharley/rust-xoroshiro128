@@ -28,5 +28,5 @@ originally proposed by David Blackman and Sebastiano Vigna. [See their website f
   [gh-issues]: https://github.com/mscharley/rust-xoroshiro128/issues
   [license]: https://github.com/mscharley/rust-xoroshiro128/blob/master/LICENSE.md
   [xoroshiro]: http://xoroshiro.di.unimi.it/
-  [documentation]: https://mscharley.github.io/rust-xoroshiro128/
+  [documentation]: https://docs.rs/xoroshiro128
   [crates.io]: https://crates.io/crates/xoroshiro128
