@@ -23,8 +23,10 @@ jobs:
     executor: rust
     steps:
       - checkout
-      - run: cargo test --locked --all-features
-      - run: cargo bench --locked --all-features
+      - run: cargo test --locked
+      - run: cargo test --locked --features rand
+      - run: cargo test --locked --features std
+      - run: cargo bench --locked --features rand
   docs:
     executor: rust
     steps:

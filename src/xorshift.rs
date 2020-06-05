@@ -87,7 +87,7 @@ impl Default for XorShift1024Seed {
   }
 }
 
-impl std::convert::AsMut<[u8]> for XorShift1024Seed {
+impl core::convert::AsMut<[u8]> for XorShift1024Seed {
   fn as_mut(&mut self) -> &mut [u8] {
     &mut self.0[..]
   }

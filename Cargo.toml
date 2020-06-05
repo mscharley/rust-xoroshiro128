@@ -10,6 +10,10 @@ license = "MIT"
 keywords = ["rng", "random", "xorshift", "xoroshiro", "splitmix"]
 exclude = [".gitignore", "circle.yml"]
 
+[features]
+# This crate is built with no_std by default. This feature builds it with std.
+std = []
+
 [dependencies]
 rand_core = "0.5"
 rand = { version = "0.7", optional = true }
